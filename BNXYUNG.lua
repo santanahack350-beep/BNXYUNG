@@ -5,54 +5,49 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
-StarterGui:SetCore("SendNotification", {
-    Title = "BNXYUNG",
-    Text = "Script ejecutado ✅",
-    Duration = 5
-})
+local selectedTarget = nil
+local aimbotOn = false
+local espOn = false
+local flyOn = false
+local flySpeed = 50
 
--- Estado global
-local menuVisible = true
-local espMenuVisible = false
-
--- GUI principal
+-- GUI
 local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
-gui.Name = "BNXYUNG_Menu"
+gui.Name = "BNXYUNG_HUB"
 
-local mainFrame = Instance.new("Frame", gui)
-mainFrame.Size = UDim2.new(0, 220, 0, 400)
-mainFrame.Position = UDim2.new(0, 10, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+local main = Instance.new("Frame", gui)
+main.Size = UDim2.new(0, 250, 0, 420)
+main.Position = UDim2.new(0, 10, 0.5, -210)
+main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 
-local title = Instance.new("TextLabel", mainFrame)
+local title = Instance.new("TextLabel", main)
 title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "MENU BNXYUNG"
+title.Text = "BNXYUNG HUB"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Font = Enum.Font.GothamBold
 title.TextSize = 20
 title.BackgroundTransparency = 1
 
--- Minimizar botón
-local minimizeBtn = Instance.new("TextButton", mainFrame)
-minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
-minimizeBtn.Position = UDim2.new(1, -35, 0, 5)
-minimizeBtn.Text = "-"
-minimizeBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local minimize = Instance.new("TextButton", main)
+minimize.Size = UDim2.new(0, 30, 0, 30)
+minimize.Position = UDim2.new(1, -35, 0, 5)
+minimize.Text = "-"
+minimize.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+minimize.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- Scroll
-local scroll = Instance.new("ScrollingFrame", mainFrame)
+local scroll = Instance.new("ScrollingFrame", main)
 scroll.Size = UDim2.new(1, -20, 1, -50)
 scroll.Position = UDim2.new(0, 10, 0, 50)
-scroll.CanvasSize = UDim2.new(0, 0, 0, 600)
+scroll.CanvasSize = UDim2.new(0, 0, 0, 800)
 scroll.ScrollBarThickness = 6
 scroll.BackgroundTransparency = 1
 
 local layout = Instance.new("UIListLayout", scroll)
 layout.Padding = UDim.new(0, 6)
 
--- Función para crear botones
+-- Botón genérico
 local function createButton(text, callback)
     local btn = Instance.new("TextButton", scroll)
     btn.Size = UDim2.new(1, 0, 0, 30)
@@ -64,75 +59,123 @@ local function createButton(text, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
--- Funciones
-local function activarAIM()
-    StarterGui:SetCore("SendNotification", {Title = "BNXYUNG", Text = "AIM IA Activado 🎯", Duration = 4})
-end
+-- Dropdown de jugadores
+local dropdown = Instance.new("TextButton", scroll)
+dropdown.Size = UDim2.new(1, 0, 0, 30)
+dropdown.Text = "Seleccionar enemigo 🎯"
+dropdown.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+dropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
 
-local function activarTP()
-    StarterGui:SetCore("SendNotification", {Title = "BNXYUNG", Text = "TP Activado 🚀", Duration = 4})
-end
+local listFrame = Instance.new("Frame", scroll)
+listFrame.Size = UDim2.new(1, 0, 0, 120)
+listFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+listFrame.Visible = false
 
-local function activarTextura()
-    StarterGui:SetCore("SendNotification", {Title = "BNXYUNG", Text = "Textura aplicada 💫", Duration = 4})
-end
+local listLayout = Instance.new("UIListLayout", listFrame)
+listLayout.Padding = UDim.new(0, 4)
 
-local function mostrarID()
+dropdown.MouseButton1Click:Connect(function()
+    listFrame.Visible = not listFrame.Visible
+    listFrame:ClearAllChildren()
+    listLayout.Parent = listFrame
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then
+            local btn = Instance.new("TextButton", listFrame)
+            btn.Size = UDim2.new(1, 0, 0, 25)
+            btn.Text = p.Name
+            btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            btn.MouseButton1Click:Connect(function()
+                selectedTarget = p
+                dropdown.Text = "🎯 " .. p.Name
+                listFrame.Visible = false
+            end)
+        end
+    end
+end)
+
+-- Aimbot
+local function toggleAimbot()
+    aimbotOn = not aimbotOn
     StarterGui:SetCore("SendNotification", {
         Title = "BNXYUNG",
-        Text = "ID: " .. LocalPlayer.UserId .. " | Nombre: " .. LocalPlayer.Name,
-        Duration = 6
-    })
-end
-
-local function cambiarIdioma()
-    StarterGui:SetCore("SendNotification", {
-        Title = "BNXYUNG",
-        Text = "Idioma cambiado a Español 🌐",
+        Text = aimbotOn and "Aimbot Activado 🎯" or "Aimbot Desactivado ❌",
         Duration = 4
     })
+
+    if aimbotOn then
+        RunService.RenderStepped:Connect(function()
+            if not aimbotOn then return end
+            if selectedTarget and selectedTarget.Character and selectedTarget.Character:FindFirstChild("Head") then
+                workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, selectedTarget.Character.Head.Position)
+            end
+        end)
+    end
 end
 
--- Submenú ESP
-local espFrame = Instance.new("Frame", gui)
-espFrame.Size = UDim2.new(0, 200, 0, 220)
-espFrame.Position = UDim2.new(0, 240, 0.5, -110)
-espFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-espFrame.Visible = false
+-- ESP
+local function toggleESP()
+    espOn = not espOn
+    StarterGui:SetCore("SendNotification", {
+        Title = "BNXYUNG",
+        Text = espOn and "ESP Activado 👁️" or "ESP Desactivado ❌",
+        Duration = 4
+    })
 
-local espLayout = Instance.new("UIListLayout", espFrame)
-espLayout.Padding = UDim.new(0, 6)
-
-local function toggleESPMenu()
-    espMenuVisible = not espMenuVisible
-    espFrame.Visible = espMenuVisible
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+            if espOn then
+                local billboard = Instance.new("BillboardGui", p.Character.HumanoidRootPart)
+                billboard.Size = UDim2.new(0, 100, 0, 40)
+                billboard.AlwaysOnTop = true
+                billboard.Name = "BNX_ESP"
+                local label = Instance.new("TextLabel", billboard)
+                label.Size = UDim2.new(1, 0, 1, 0)
+                label.Text = p.Name
+                label.TextColor3 = Color3.fromRGB(255, 255, 0)
+                label.BackgroundTransparency = 1
+            else
+                for _, gui in pairs(p.Character.HumanoidRootPart:GetChildren()) do
+                    if gui:IsA("BillboardGui") and gui.Name == "BNX_ESP" then
+                        gui:Destroy()
+                    end
+                end
+            end
+        end
+    end
 end
 
-createButton("🎯 AIM IA", activarAIM)
-createButton("🚀 TP", activarTP)
-createButton("💫 Coloca Textura", activarTextura)
-createButton("🧑‍💻 Mostrar ID", mostrarID)
-createButton("🌐 Idioma", cambiarIdioma)
-createButton("👁️ ESP Opciones", toggleESPMenu)
-
--- Botones del submenú ESP
-local function espOption(name)
-    local btn = Instance.new("TextButton", espFrame)
-    btn.Size = UDim2.new(1, 0, 0, 30)
-    btn.Text = name
-    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+-- TP
+local function tpToTarget()
+    if selectedTarget and selectedTarget.Character and selectedTarget.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character:MoveTo(selectedTarget.Character.HumanoidRootPart.Position + Vector3.new(0, 5, 0))
+    end
 end
 
-espOption("Mostrar Nombres")
-espOption("Mostrar Cajas")
-espOption("Mostrar Líneas")
-espOption("Mostrar Distancia")
-espOption("Activar/Desactivar ESP")
+-- Volar
+local bodyGyro, bodyVelocity
+local function toggleFly()
+    flyOn = not flyOn
+    StarterGui:SetCore("SendNotification", {
+        Title = "BNXYUNG",
+        Text = flyOn and "Vuelo Activado 🛸" or "Vuelo Desactivado ❌",
+        Duration = 4
+    })
 
--- Minimizar lógica
-minimizeBtn.MouseButton1Click:Connect(function()
-    menuVisible = not menuVisible
-    scroll.Visible = menuVisible
-    title.Visible = menuVisible
-end)
+    if flyOn then
+        local char = LocalPlayer.Character
+        bodyGyro = Instance.new("BodyGyro", char.HumanoidRootPart)
+        bodyVelocity = Instance.new("BodyVelocity", char.HumanoidRootPart)
+        bodyGyro.P = 9e4
+        bodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+        bodyGyro.CFrame = char.HumanoidRootPart.CFrame
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+        bodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+
+        RunService.RenderStepped:Connect(function()
+            if not flyOn then return end
+            local move = Vector3.new()
+            if UserInputService:IsKeyDown(Enum.KeyCode.W) then move = move + workspace.CurrentCamera.CFrame.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.S) then move = move - workspace.CurrentCamera.CFrame.LookVector end
+            if UserInputService:IsKeyDown(Enum.KeyCode.A) then move = move - workspace.CurrentCamera.CFrame.RightVector end
+            if
