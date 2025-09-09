@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/santanahack350-beep/BNXYUNG/main/BNXYUNG.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/BNXYUNG/Panel/main/BNXYUNG.lua"))()
