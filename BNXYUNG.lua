@@ -1,3 +1,6 @@
+repeat wait() until game:IsLoaded()
+repeat wait() until game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local StarterGui = game:GetService("StarterGui")
@@ -5,6 +8,20 @@ local RunService = game:GetService("RunService")
 
 local username = "BNX"
 local password = "1234"
+
+local function getClosestEnemy()
+    local closest, shortest = nil, math.huge
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+            local dist = (LocalPlayer.Character.HumanoidRootPart.Position - p.Character.HumanoidRootPart.Position).Magnitude
+            if dist < shortest then
+                shortest = dist
+                closest = p
+            end
+        end
+    end
+    return closest
+end
 
 local function showLogin()
     local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -19,9 +36,9 @@ local function showLogin()
     title.Size = UDim2.new(1, 0, 0, 30)
     title.Text = "BNX LOGIN 🔐"
     title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.BackgroundTransparency = 1
     title.Font = Enum.Font.GothamBold
     title.TextSize = 20
+    title.BackgroundTransparency = 1
 
     local userBox = Instance.new("TextBox", frame)
     userBox.Size = UDim2.new(0.8, 0, 0, 30)
@@ -49,35 +66,12 @@ local function showLogin()
     loginBtn.MouseButton1Click:Connect(function()
         if userBox.Text == username and passBox.Text == password then
             gui:Destroy()
-            StarterGui:SetCore("SendNotification", {
-                Title = "BNXYUNG",
-                Text = "Acceso concedido 🔥",
-                Duration = 5
-            })
+            StarterGui:SetCore("SendNotification", {Title = "BNXYUNG", Text = "Acceso concedido 🔥", Duration = 5})
             loadMenu()
         else
-            StarterGui:SetCore("SendNotification", {
-                Title = "BNXYUNG",
-                Text = "Credenciales incorrectas ❌",
-                Duration = 5
-            })
+            StarterGui:SetCore("SendNotification", {Title = "BNXYUNG", Text = "Credenciales incorrectas ❌", Duration = 5})
         end
     end)
-end
-
-local function getClosestEnemy()
-    local closest = nil
-    local shortest = math.huge
-    for _, p in pairs(Players:GetPlayers()) do
-        if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-            local dist = (LocalPlayer.Character.HumanoidRootPart.Position - p.Character.HumanoidRootPart.Position).Magnitude
-            if dist < shortest then
-                shortest = dist
-                closest = p
-            end
-        end
-    end
-    return closest
 end
 
 local aimbotActivo = false
@@ -181,9 +175,9 @@ function loadMenu()
     title.Size = UDim2.new(1, 0, 0, 40)
     title.Text = "MENU BNXYUNG"
     title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.BackgroundTransparency = 1
     title.Font = Enum.Font.GothamBold
     title.TextSize = 20
+    title.BackgroundTransparency = 1
 
     local function createButton(text, y, callback)
         local btn = Instance.new("TextButton", frame)
@@ -192,8 +186,4 @@ function loadMenu()
         btn.Text = text
         btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        btn.MouseButton1Click:Connect(callback)
-    end
-
-    createButton("🎯 AIM IA", 50, activarAimbotLag)
-    createButton("👁️
+        btn.Mouse
