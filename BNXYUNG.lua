@@ -172,4 +172,17 @@ showBtn.Size = UDim2.new(0, 160, 0, 40)
 showBtn.Position = UDim2.new(0, 20, 0.5, -20)
 showBtn.Text = "+ BNXYUNG PANEL"
 showBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-showBtn.BackgroundColor
+showBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+showBtn.Font = Enum.Font.GothamBold
+showBtn.TextSize = 16
+showBtn.Visible = false
+showBtn.MouseButton1Click:Connect(function()
+    panel.Visible = true
+    showBtn.Visible = false
+end)
+
+-- TECLA "-" PARA MINIMIZAR PANEL
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Minus then
+        panel.Visible = false
+        showBtn.Visible =
