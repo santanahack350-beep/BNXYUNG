@@ -11,22 +11,44 @@ panel.BorderSizePixel = 0
 panel.Active = true
 panel.Draggable = true
 
-local corner = Instance.new("UICorner", panel)
-corner.CornerRadius = UDim.new(0, 8)
-
 local stroke = Instance.new("UIStroke", panel)
-stroke.Color = Color3.fromRGB(80, 80, 80)
 stroke.Thickness = 2
+task.spawn(function()
+    while true do
+        for i = 0, 1, 0.01 do
+            stroke.Color = Color3.fromHSV(i, 1, 1)
+            task.wait(0.03)
+        end
+    end
+end)
+
+local sound = Instance.new("Sound", gui)
+sound.SoundId = "rbxassetid://9118823104"
+sound.Volume = 1
+sound:Play()
+
+local notify = Instance.new("TextLabel", gui)
+notify.Size = UDim2.new(0, 300, 0, 40)
+notify.Position = UDim2.new(0.5, -150, 0, 20)
+notify.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+notify.TextColor3 = Color3.fromRGB(255, 255, 255)
+notify.Text = "✅ BNXYUNG PANEL V1.0 ACTIVADO"
+notify.Font = Enum.Font.GothamBold
+notify.TextSize = 16
+notify.BackgroundTransparency = 0.2
+notify.ZIndex = 999
+game:GetService("TweenService"):Create(notify, TweenInfo.new(0.5), {Position = UDim2.new(0.5, -150, 0, 60)}):Play()
+task.delay(3, function() notify:Destroy() end)
 
 local title = Instance.new("TextLabel", panel)
 title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "🔥 BNXYUNG MENU V9.0"
+title.Text = "🔥 BNXYUNG PANEL V1.0"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
 title.TextSize = 20
 
-local tabs = {"MAIN", "MOVEMENT", "VISUALS", "AIMBOT", "SERVER"}
+local tabs = {"MAIN", "MOVEMENT", "VISUALS", "AIMBOT", "SERVER", "CRÉDITO"}
 local tabButtons = {}
 local currentTab = "MAIN"
 
@@ -88,7 +110,7 @@ for i, tabName in ipairs(tabs) do
     end)
 end
 
--- MAIN
+-- FUNCIONES DE EJEMPLO
 createButton("MAIN", "Magnet Collect", function()
     for _, drop in pairs(workspace:GetChildren()) do
         if drop:IsA("Tool") and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
@@ -97,42 +119,7 @@ createButton("MAIN", "Magnet Collect", function()
     end
 end)
 
-createButton("MAIN", "Auto Equip Best", function()
-    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer("EquipBest")
-end)
-
-createButton("MAIN", "Anti Slow Zones", function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then hum.WalkSpeed = 32 end
-end)
-
--- MOVEMENT
-createButton("MOVEMENT", "Fly Mode", function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then hum.PlatformStand = true end
-end)
-
-createButton("MOVEMENT", "Super Jump", function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then hum.JumpPower = 120 end
-end)
-
-createButton("MOVEMENT", "Run Fast", function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then hum.WalkSpeed = 60 end
-end)
-
-createButton("MOVEMENT", "Safe Jump (No Delete)", function()
-    local hum = lp.Character and lp.Character:FindFirstChildOfClass("Humanoid")
-    if hum then
-        hum:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
-        hum:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
-        hum:SetStateEnabled(Enum.HumanoidStateType.Physics, false)
-    end
-end)
-
--- VISUALS
-createButton("VISUALS", "ESP - Name", function()
+createButton("VISUALS", "ESP Name", function()
     for _, p in pairs(game:GetService("Players"):GetPlayers()) do
         if p ~= lp and p.Character and p.Character:FindFirstChild("Head") then
             local esp = Instance.new("BillboardGui", p.Character.Head)
@@ -149,46 +136,38 @@ createButton("VISUALS", "ESP - Name", function()
     end
 end)
 
--- AIMBOT
-createButton("AIMBOT", "Aimbot (Head)", function()
-    local cam = workspace.CurrentCamera
-    local closest = nil
-    local dist = math.huge
-    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
-        if p ~= lp and p.Character and p.Character:FindFirstChild("Head") then
-            local d = (cam.CFrame.Position - p.Character.Head.Position).Magnitude
-            if d < dist then
-                dist = d
-                closest = p
-            end
-        end
-    end
-    if closest then
-        cam.CFrame = CFrame.new(cam.CFrame.Position, closest.Character.Head.Position)
-    end
-end)
+createButton("CRÉDITO", "Crédito: BNXYUNG7", function() end)
+createButton("CRÉDITO", "Grupo: https://t.me/kakashii_ios", function() end)
 
--- SERVER
-createButton("SERVER", "Server Hop", function()
-    local tp = game:GetService("TeleportService")
-    tp:TeleportToPlaceInstance(game.PlaceId, game.JobId)
-end)
-
-createButton("SERVER", "Rejoin", function()
-    game:GetService("TeleportService"):Teleport(game.PlaceId, lp)
-end)
-
--- MINIMIZE / CLOSE
+-- BOTÓN MINIMIZAR
 local hide = Instance.new("TextButton", panel)
-hide.Size = UDim2.new(0.5, -15, 0, 30)
-hide.Position = UDim2.new(0, 10, 1, -35)
-hide.Text = "🗕 HIDE"
+hide.Size = UDim2.new(0, 30, 0, 30)
+hide.Position = UDim2.new(1, -70, 0, 10)
+hide.Text = "-"
 hide.TextColor3 = Color3.fromRGB(255, 255, 255)
 hide.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 hide.Font = Enum.Font.GothamBold
-hide.TextSize = 16
+hide.TextSize = 20
 hide.MouseButton1Click:Connect(function()
     panel.Visible = false
 end)
 
+-- BOTÓN CERRAR
 local close = Instance.new("TextButton", panel)
+close.Size = UDim2.new(0, 30, 0, 30)
+close.Position = UDim2.new(1, -35, 0, 10)
+close.Text = "X"
+close.TextColor3 = Color3.fromRGB(255, 255, 255)
+close.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+close.Font = Enum.Font.GothamBold
+close.TextSize = 20
+close.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
+
+-- TECLA "-" PARA MOSTRAR PANEL
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Minus then
+        panel.Visible = not panel.Visible
+    end
+end)
