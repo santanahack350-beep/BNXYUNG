@@ -183,6 +183,4 @@ end)
 
 -- TECLA "-" PARA MINIMIZAR PANEL
 game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Minus then
-        panel.Visible = false
-        showBtn.Visible =
+    if input.KeyCode ==
