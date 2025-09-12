@@ -33,7 +33,7 @@ notify.Size = UDim2.new(0, 300, 0, 40)
 notify.Position = UDim2.new(0.5, -150, 0, 20)
 notify.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 notify.TextColor3 = Color3.fromRGB(255, 255, 255)
-notify.Text = "✅ BNXYUNG PANEL V1.0 ACTIVADO"
+notify.Text = "✅ BNXYUNG PANEL V1.1 ACTIVADO"
 notify.Font = Enum.Font.GothamBold
 notify.TextSize = 16
 notify.BackgroundTransparency = 0.2
@@ -43,15 +43,15 @@ task.delay(3, function() notify:Destroy() end)
 
 local title = Instance.new("TextLabel", panel)
 title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "🔥 BNXYUNG PANEL V1.0"
+title.Text = "🔥 BNXYUNG PANEL V1.1"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
 title.TextSize = 20
 
-local tabs = {"MAIN", "MOVEMENT", "VISUALS", "AIMBOT", "SERVER", "CRÉDITO"}
+local tabs = {"CRÉDITO"}
 local tabButtons = {}
-local currentTab = "MAIN"
+local currentTab = "CRÉDITO"
 
 local tabFrame = Instance.new("Frame", panel)
 tabFrame.Size = UDim2.new(0, 120, 1, -50)
@@ -76,19 +76,14 @@ scrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
 local function createButton(tab, name, func)
     local btn = Instance.new("TextButton", scroll)
     btn.Size = UDim2.new(1, -10, 0, 30)
-    btn.Text = "🔘 " .. name .. " [OFF]"
+    btn.Text = "🔘 " .. name
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 16
     btn.Name = tab
     btn.Visible = tab == currentTab
-    local state = false
-    btn.MouseButton1Click:Connect(function()
-        state = not state
-        btn.Text = "🔘 " .. name .. (state and " [ON]" or " [OFF]")
-        if state then func() end
-    end)
+    btn.MouseButton1Click:Connect(func)
 end
 
 for i, tabName in ipairs(tabs) do
@@ -111,32 +106,7 @@ for i, tabName in ipairs(tabs) do
     end)
 end
 
--- FUNCIONES DE EJEMPLO
-createButton("MAIN", "Magnet Collect", function()
-    for _, drop in pairs(workspace:GetChildren()) do
-        if drop:IsA("Tool") and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
-            drop.Handle.CFrame = lp.Character.HumanoidRootPart.CFrame
-        end
-    end
-end)
-
-createButton("VISUALS", "ESP Name", function()
-    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
-        if p ~= lp and p.Character and p.Character:FindFirstChild("Head") then
-            local esp = Instance.new("BillboardGui", p.Character.Head)
-            esp.Size = UDim2.new(0, 100, 0, 40)
-            esp.AlwaysOnTop = true
-            local label = Instance.new("TextLabel", esp)
-            label.Size = UDim2.new(1, 0, 1, 0)
-            label.BackgroundTransparency = 1
-            label.Text = p.Name
-            label.TextColor3 = Color3.fromRGB(255, 0, 0)
-            label.Font = Enum.Font.GothamBold
-            label.TextSize = 14
-        end
-    end
-end)
-
+-- SOLO CRÉDITO FUNCIONAL
 createButton("CRÉDITO", "Crédito: BNXYUNG7", function() end)
 createButton("CRÉDITO", "Grupo: https://t.me/kakashii_ios", function() end)
 
@@ -181,7 +151,3 @@ showBtn.MouseButton1Click:Connect(function()
     panel.Visible = true
     showBtn.Visible = false
 end)
-
--- TECLA "-" PARA MINIMIZAR PANEL (blindado con pcall)
-pcall(function()
-    game:Get
