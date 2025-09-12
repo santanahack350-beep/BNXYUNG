@@ -33,7 +33,7 @@ notify.Size = UDim2.new(0, 300, 0, 40)
 notify.Position = UDim2.new(0.5, -150, 0, 20)
 notify.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 notify.TextColor3 = Color3.fromRGB(255, 255, 255)
-notify.Text = "✅ BNXYUNG PANEL V1.1 ACTIVADO"
+notify.Text = "✅ BNXYUNG PANEL V2.0 ACTIVADO"
 notify.Font = Enum.Font.GothamBold
 notify.TextSize = 16
 notify.BackgroundTransparency = 0.2
@@ -43,15 +43,15 @@ task.delay(3, function() notify:Destroy() end)
 
 local title = Instance.new("TextLabel", panel)
 title.Size = UDim2.new(1, 0, 0, 40)
-title.Text = "🔥 BNXYUNG PANEL V1.1"
+title.Text = "🔥 BNXYUNG PANEL V2.0"
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.BackgroundTransparency = 1
 title.Font = Enum.Font.GothamBold
 title.TextSize = 20
 
-local tabs = {"CRÉDITO"}
+local tabs = {"BRAINROT", "CRÉDITO"}
 local tabButtons = {}
-local currentTab = "CRÉDITO"
+local currentTab = "BRAINROT"
 
 local tabFrame = Instance.new("Frame", panel)
 tabFrame.Size = UDim2.new(0, 120, 1, -50)
@@ -106,48 +106,78 @@ for i, tabName in ipairs(tabs) do
     end)
 end
 
--- SOLO CRÉDITO FUNCIONAL
-createButton("CRÉDITO", "Crédito: BNXYUNG7", function() end)
-createButton("CRÉDITO", "Grupo: https://t.me/kakashii_ios", function() end)
-
--- BOTÓN MINIMIZAR
-local hide = Instance.new("TextButton", panel)
-hide.Size = UDim2.new(0, 30, 0, 30)
-hide.Position = UDim2.new(1, -70, 0, 10)
-hide.Text = "-"
-hide.TextColor3 = Color3.fromRGB(255, 255, 255)
-hide.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-hide.Font = Enum.Font.GothamBold
-hide.TextSize = 20
-hide.MouseButton1Click:Connect(function()
-    panel.Visible = false
-    showBtn.Visible = true
+-- FUNCIONES BRAINROT
+createButton("BRAINROT", "ESP Name", function()
+    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+        if p ~= lp and p.Character and p.Character:FindFirstChild("Head") then
+            local esp = Instance.new("BillboardGui", p.Character.Head)
+            esp.Size = UDim2.new(0, 100, 0, 40)
+            esp.AlwaysOnTop = true
+            local label = Instance.new("TextLabel", esp)
+            label.Size = UDim2.new(1, 0, 1, 0)
+            label.BackgroundTransparency = 1
+            label.Text = p.Name
+            label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            label.Font = Enum.Font.GothamBold
+            label.TextSize = 14
+        end
+    end
 end)
 
--- BOTÓN CERRAR
-local close = Instance.new("TextButton", panel)
-close.Size = UDim2.new(0, 30, 0, 30)
-close.Position = UDim2.new(1, -35, 0, 10)
-close.Text = "X"
-close.TextColor3 = Color3.fromRGB(255, 255, 255)
-close.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-close.Font = Enum.Font.GothamBold
-close.TextSize = 20
-close.MouseButton1Click:Connect(function()
-    gui:Destroy()
+createButton("BRAINROT", "ESP ID", function()
+    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+        if p ~= lp and p.UserId and p.Character and p.Character:FindFirstChild("Head") then
+            local esp = Instance.new("BillboardGui", p.Character.Head)
+            esp.Size = UDim2.new(0, 100, 0, 40)
+            esp.AlwaysOnTop = true
+            local label = Instance.new("TextLabel", esp)
+            label.Size = UDim2.new(1, 0, 1, 0)
+            label.BackgroundTransparency = 1
+            label.Text = "ID: " .. p.UserId
+            label.TextColor3 = Color3.fromRGB(0, 255, 255)
+            label.Font = Enum.Font.GothamBold
+            label.TextSize = 14
+        end
+    end
 end)
 
--- BOTÓN FLOTANTE PARA REABRIR PANEL
-local showBtn = Instance.new("TextButton", gui)
-showBtn.Size = UDim2.new(0, 160, 0, 40)
-showBtn.Position = UDim2.new(0, 20, 0.5, -20)
-showBtn.Text = "+ BNXYUNG PANEL"
-showBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-showBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-showBtn.Font = Enum.Font.GothamBold
-showBtn.TextSize = 16
-showBtn.Visible = false
-showBtn.MouseButton1Click:Connect(function()
-    panel.Visible = true
-    showBtn.Visible = false
+createButton("BRAINROT", "ESP Skin", function()
+    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+        if p ~= lp and p.Character and p.Character:FindFirstChild("Head") then
+            local esp = Instance.new("BillboardGui", p.Character.Head)
+            esp.Size = UDim2.new(0, 100, 0, 40)
+            esp.AlwaysOnTop = true
+            local label = Instance.new("TextLabel", esp)
+            label.Size = UDim2.new(1, 0, 1, 0)
+            label.BackgroundTransparency = 1
+            label.Text = "Skin: " .. tostring(p.Character:FindFirstChildOfClass("Shirt") and p.Character.Shirt.ShirtTemplate or "N/A")
+            label.TextColor3 = Color3.fromRGB(255, 200, 0)
+            label.Font = Enum.Font.GothamBold
+            label.TextSize = 14
+        end
+    end
 end)
+
+createButton("BRAINROT", "Skeleton ESP", function()
+    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+        if p ~= lp and p.Character then
+            for _, limb in pairs(p.Character:GetChildren()) do
+                if limb:IsA("BasePart") then
+                    local box = Instance.new("BoxHandleAdornment", limb)
+                    box.Size = limb.Size
+                    box.Adornee = limb
+                    box.AlwaysOnTop = true
+                    box.ZIndex = 10
+                    box.Color3 = Color3.fromRGB(0, 255, 0)
+                    box.Transparency = 0.5
+                end
+            end
+        end
+    end
+end)
+
+createButton("BRAINROT", "Línea ESP", function()
+    local camera = workspace.CurrentCamera
+    for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+        if p ~= lp and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+            local tracer
