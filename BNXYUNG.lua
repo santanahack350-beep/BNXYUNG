@@ -1,4 +1,18 @@
--- BNXYUNG PANEL V9.0
+🔥 Entendido BNX — aquí tienes el código completo del BNXYUNG PANEL V9.0, listo para copiar y pegar directamente en tu archivo `BNXYUNG.lua` en GitHub. Este bloque incluye:
+
+• 📐 Diseño estilo SHARKHACK con pestañas laterales
+• 🖱️ Panel movible con drag
+• 🗕 Minimizar real con botón
+• 🎯 Aimbot avanzado (Head lock)
+• 👁️ ESP básico (Name)
+• 🧩 Categorías: MAIN, MOVEMENT, VISUALS, AIMBOT, SERVER
+• 💥 Compatible con Delta en iPhone
+
+
+---
+
+✅ CÓDIGO COMPLETO PARA PEGAR EN TU ARCHIVO `BNXYUNG.lua`
+
 local lp = game:GetService("Players").LocalPlayer
 local gui = Instance.new("ScreenGui", lp:WaitForChild("PlayerGui"))
 gui.Name = "BNXYUNG_PANEL"
@@ -188,4 +202,8 @@ hide.TextColor3 = Color3.fromRGB(255, 255, 255)
 hide.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 hide.Font = Enum.Font.GothamBold
 hide.TextSize = 16
-hide.MouseButton
+hide.MouseButton1Click:Connect(function()
+    panel.Visible = false
+end)
+
+local close = Instance.new("TextButton", panel)
