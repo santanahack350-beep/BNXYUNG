@@ -150,6 +150,7 @@ hide.Font = Enum.Font.GothamBold
 hide.TextSize = 20
 hide.MouseButton1Click:Connect(function()
     panel.Visible = false
+    showBtn.Visible = true
 end)
 
 -- BOTÓN CERRAR
@@ -165,9 +166,10 @@ close.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
--- TECLA "-" PARA MOSTRAR PANEL
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Minus then
-        panel.Visible = not panel.Visible
-    end
-end)
+-- BOTÓN FLOTANTE PARA REABRIR PANEL
+local showBtn = Instance.new("TextButton", gui)
+showBtn.Size = UDim2.new(0, 160, 0, 40)
+showBtn.Position = UDim2.new(0, 20, 0.5, -20)
+showBtn.Text = "+ BNXYUNG PANEL"
+showBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+showBtn.BackgroundColor
