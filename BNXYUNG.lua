@@ -1,18 +1,25 @@
 -- BNXYUNG PANEL V3.0 🔥
-local lp = game:GetService("Players").LocalPlayer
-local char = lp.Character or lp.CharacterAdded:Wait()
+local Players = game:GetService("Players")
+local lp = Players.LocalPlayer
+
+lp.CharacterAdded:Wait()
+local char = lp.Character
 local hum = char:WaitForChild("Humanoid")
 
 -- GUI Setup
-local gui = Instance.new("ScreenGui", lp:WaitForChild("PlayerGui"))
+local gui = Instance.new("ScreenGui")
 gui.Name = "BNXYUNG_PANEL"
-local frame = Instance.new("Frame", gui)
+gui.ResetOnSpawn = false
+gui.Parent = lp:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 400, 0, 500)
 frame.Position = UDim2.new(0.5, -200, 0.5, -250)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
+frame.Parent = gui
 
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, 0, 0, 40)
@@ -24,7 +31,7 @@ title.TextSize = 20
 
 -- Function Buttons
 local function createButton(text, yPos, callback)
-    local btn = Instance.new("TextButton", frame)
+    local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, -20, 0, 30)
     btn.Position = UDim2.new(0, 10, 0, yPos)
     btn.Text = text
@@ -32,20 +39,24 @@ local function createButton(text, yPos, callback)
     btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     btn.Font = Enum.Font.Gotham
     btn.TextSize = 16
+    btn.Parent = frame
     btn.MouseButton1Click:Connect(callback)
 end
 
 -- MAIN
 createButton("💸 Auto Buy Brainrot", 50, function()
-    print("Auto Buy Brainrot activado")
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild("BuyBrainrot")
+    if remote then remote:FireServer() end
 end)
 
 createButton("🧲 Auto Collect", 90, function()
-    print("Auto Collect activado")
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild("CollectBrainrot")
+    if remote then remote:FireServer() end
 end)
 
 createButton("🔒 Auto Lock Base", 130, function()
-    print("Auto Lock Base activado")
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild("LockBase")
+    if remote then remote:FireServer() end
 end)
 
 createButton("🛡️ Anti AFK", 170, function()
@@ -57,11 +68,13 @@ createButton("🛡️ Anti AFK", 170, function()
 end)
 
 createButton("📈 Auto Upgrade Stats", 210, function()
-    print("Auto Upgrade Stats activado")
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild("UpgradeStats")
+    if remote then remote:FireServer() end
 end)
 
 createButton("🔁 Auto Rebirth", 250, function()
-    print("Auto Rebirth activado")
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild("Rebirth")
+    if remote then remote:FireServer() end
 end)
 
 -- PLAYER
@@ -70,7 +83,7 @@ createButton("🎯 Aimbot + FOV", 290, function()
     local Camera = workspace.CurrentCamera
     local function getClosest()
         local closest, dist = nil, math.huge
-        for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+        for _, v in pairs(Players:GetPlayers()) do
             if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
                 local pos = Camera:WorldToViewportPoint(v.Character.HumanoidRootPart.Position)
                 local mag = (Vector2.new(pos.X, pos.Y) - Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y/2)).Magnitude
@@ -97,22 +110,21 @@ end)
 createButton("🛡️ Vida infinita + chaleco", 370, function()
     hum.MaxHealth = math.huge
     hum.Health = math.huge
-    if char:FindFirstChild("Vest") then
-        char.Vest:Destroy()
+    if not char:FindFirstChild("Vest") then
+        local vest = Instance.new("Part", char)
+        vest.Name = "Vest"
+        vest.Size = Vector3.new(2,2,1)
+        vest.Position = char.HumanoidRootPart.Position
+        vest.Anchored = false
+        vest.CanCollide = false
     end
-    local vest = Instance.new("Part", char)
-    vest.Name = "Vest"
-    vest.Size = Vector3.new(2,2,1)
-    vest.Position = char.HumanoidRootPart.Position
-    vest.Anchored = false
-    vest.CanCollide = false
 end)
 
 -- STEALER
 createButton("🛍️ Auto Steal Brainrot", 410, function()
     local remote = game:GetService("ReplicatedStorage"):FindFirstChild("StealBrainrot")
     if remote then
-        for _, plr in pairs(game:GetService("Players"):GetPlayers()) do
+        for _, plr in pairs(Players:GetPlayers()) do
             if plr ~= lp and plr.Character and plr.Character:FindFirstChild("Brainrot") then
                 remote:FireServer(plr.Character.Brainrot)
             end
