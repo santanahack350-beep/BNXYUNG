@@ -10,6 +10,7 @@ panel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 panel.BorderSizePixel = 0
 panel.Active = true
 panel.Draggable = true
+panel.Visible = true
 
 local stroke = Instance.new("UIStroke", panel)
 stroke.Thickness = 2
@@ -182,5 +183,4 @@ showBtn.MouseButton1Click:Connect(function()
 end)
 
 -- TECLA "-" PARA MINIMIZAR PANEL
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.Key
+game:GetService("UserInputService").InputBegan
