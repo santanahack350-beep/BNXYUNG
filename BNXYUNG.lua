@@ -182,5 +182,6 @@ showBtn.MouseButton1Click:Connect(function()
     showBtn.Visible = false
 end)
 
--- TECLA "-" PARA MINIMIZAR PANEL
-game:GetService
+-- TECLA "-" PARA MINIMIZAR PANEL (blindado con pcall)
+pcall(function()
+    game:Get
