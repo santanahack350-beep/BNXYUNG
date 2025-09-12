@@ -182,4 +182,5 @@ showBtn.MouseButton1Click:Connect(function()
     showBtn.Visible = false
 end)
 
--- TE
+-- TECLA "-" PARA MINIMIZAR PANEL
+game:GetService
